@@ -1,0 +1,44 @@
+{
+    "id" : "org.freedesktop.Sdk.Extension.blueprint",
+    "runtime" : "org.freedesktop.Sdk",
+    "runtime-version" : "23.08",
+    "branch": "23.08",
+    "build-extension": true,
+    "separate-locales": false,
+    "appstream-compose": false,
+    "sdk" : "org.freedesktop.Sdk",
+    "build-options": {
+        "prefix": "/usr/lib/sdk/blueprint",
+        "prepend-path": "/usr/lib/sdk/blueprint/bin",
+        "prepend-pkg-config-path": "/usr/lib/sdk/blueprint/lib/pkgconfig",
+        "prepend-ld-library-path": "/usr/lib/sdk/blueprint/lib"
+    },
+    "modules" : [
+        {
+            "name" : "blueprint-extension",
+            "buildsystem" : "meson",
+            "builddir": true,
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://gitlab.gnome.org/jwestman/blueprint-compiler.git",
+                    "tag": "v0.12.0"
+                }
+            ]
+        },
+        {
+            "name": "appdata",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -Dm644 org.freedesktop.Sdk.Extension.blueprint.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo",
+                "appstream-compose --basename ${FLATPAK_ID} --prefix=${FLATPAK_DEST} --origin=flatpak ${FLATPAK_ID}"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "org.freedesktop.Sdk.Extension.blueprint.metainfo.xml"
+                }
+            ]
+        }
+    ]
+}
